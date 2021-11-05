@@ -5,6 +5,7 @@ Fauxlizer implementation
 import amyris_csv as A
 import json
 from math import floor
+from cleanup import explode, prop
 from cat_theory import compose, fold, tryCatch, Nothing, Schema
 
 class Fauxlizer:
@@ -51,8 +52,9 @@ class Fauxlizer:
     
     
     def pluck_item_as_json(self, index, data):
+        toJson = compose(json.dumps, prop(index))
         if index <= len(data) - 1:
-            return json.dumps(data[index])
+            return toJson(data)
         else:
             return json.dumps({})
     
@@ -104,7 +106,7 @@ class Fauxlizer:
                 sample_id: 449491,
                 fauxness: 0.651592972723,
                 category_guess: fake} """
-        data = line.split(',')
+        data = explode(line, ',')
         result = compose(self.parse, self.schema_check)(data)
         if result != {}: self.is_valid = True
         return result
@@ -116,7 +118,8 @@ class Fauxlizer:
     
     def sumBy(self, schema_key, data):
         """ only works for fauxness at the moment """
-        reducer = lambda acc,x: acc + float(x[schema_key])
+        fauxness = compose(float, prop(schema_key))
+        reducer = lambda acc,x: acc + fauxness(x)
         return fold(reducer, 0.0, data)
     
     
@@ -130,9 +133,11 @@ class Fauxlizer:
         # merge
         i = j = 0
         sortedlist = [ ]
+
+        obj_prop = compose(float, prop(key))
         
         while len(sortedlist) < len(lst):
-            if j >= len(right) or i < len(left) and left[i] != {} and right[j] != {} and float(left[i][key]) < float(right[j][key]):
+            if j >= len(right) or i < len(left) and left[i] != {} and right[j] != {} and obj_prop(left[i]) < obj_prop(right[j]):
                 sortedlist.append(left[i])
                 i += 1
             elif j < len(right):
