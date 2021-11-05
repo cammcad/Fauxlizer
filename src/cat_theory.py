@@ -1,14 +1,7 @@
-#!/usr/bin/env python3
 """
-Created on Wed Nov  3
-
-@author: cfrederick
-
 Humble beginnings of a module that encapsulates
 a few functional programming and category theory concepts
-
 """
-
 import sys
 
 class Some:

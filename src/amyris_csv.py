@@ -1,12 +1,6 @@
-#!/usr/bin/env python3
 """
-Created on Wed Nov  3
-
-@author: cfrederick
-
 A lite version of generic csv module, the name is
 just to distinguish it from the built_in csv module
-
 """
 
 from cat_theory import Some, tryCatch
@@ -47,5 +41,3 @@ class AmyrisCsv:
             output.append(parser(line))
         f.close()
         return output
-    
-        

@@ -1,18 +1,11 @@
-#!/usr/bin/env python3
 """
-Created on Wed Nov  3
-
-@author: cfrederick
-
 Fauxlizer implementation
-
 """
 
 import amyris_csv as A
 import json
 from math import floor
 from cat_theory import compose, fold, tryCatch, Nothing, Schema
-
 
 class Fauxlizer:
     def __init__(self, filename = None):
@@ -21,9 +14,8 @@ class Fauxlizer:
         self.is_valid = False
         self.has_parsed_data_file = False
         
-    
+  
     """ Fauxlizer API Methods """
-    
     def parse_data_file(self):
         self.has_parsed_data_file = True
         return self.csv.parse_data_file(self.parse_line)
@@ -65,9 +57,7 @@ class Fauxlizer:
             return json.dumps({})
     
     
-    
     """ Fauxlizer Utility Methods """
-    
     def parse_type(self, f, d):
         maybe_type = tryCatch(f, d)
         if type(maybe_type) is Nothing:
@@ -90,8 +80,7 @@ class Fauxlizer:
             self.parse_type(lambda d: int(d[1]), data) \
             and \
             self.parse_type(lambda d: float(d[2]), data)
-    
-        
+       
     def schema_check(self, data):
         return \
             Schema(data) \
@@ -110,9 +99,6 @@ class Fauxlizer:
         else:
             return output
     
-    
-    
-    
     def parse_line(self, line):
         """ ex. {experiment_name: 'examination.76377',
                 sample_id: 449491,
@@ -123,7 +109,6 @@ class Fauxlizer:
         if result != {}: self.is_valid = True
         return result
 
-    
     
     def get_headers(self):
        return self.csv.headers
@@ -157,10 +142,7 @@ class Fauxlizer:
         return sortedlist
     
     
-    
-
-
-
+""" Test Runner """
 def main(fauxlizer_file):
     f = Fauxlizer(fauxlizer_file)
     # parse
@@ -180,9 +162,4 @@ def main(fauxlizer_file):
 if __name__ == '__main__':
     main('././data_files/file_1.faux') # valid test run
     print('\n')
-    main('././data_files/file_3.faux') # invalid test run
-    
-    
-    
-    
-    
+    main('././data_files/file_3.faux') # invalid test run 
