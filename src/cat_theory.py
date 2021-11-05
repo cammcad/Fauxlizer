@@ -51,11 +51,12 @@ def compose(f, g):
 	return apply
 
 def tryCatch(f, x):
-		try:
-			return Some(f(x))
-		except Exception as e:
-			exc_type, exc_obj, exc_tb = sys.exc_info()
-			message = '''exception type: {}
-			exception object: {}
-			stack trace: {}'''
-			return Nothing(message.format(exc_type, exc_obj, exc_tb))
+	try:
+	   return Some(f(x))
+	except Exception as e:
+	   exc_type, exc_obj, exc_tb = sys.exc_info()
+	   message = \
+        '''exception type: {}
+		exception object: {}
+		stack trace: {}'''
+	return Nothing(message.format(exc_type, exc_obj, exc_tb))
