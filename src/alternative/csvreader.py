@@ -18,12 +18,15 @@ def get_file_handle(filename):
 
 
 def get_headers(reader):
-    if reader["file_handle"] is None:
+    if reader["file_handle"] is None or reader["headers"] != []:
         return reader
-    elif reader["headers"] == []:
+    else:
         line = reader["file_handle"].readline()
-        reader["headers"] = explode(line, ",")
-        return reader
+        return {
+            "headers": explode(line, ","),
+            "file_handle": reader["file_handle"],
+            "data": reader["data"],
+        }
 
 
 def make_reader(filename=None):
@@ -37,18 +40,21 @@ def make_reader(filename=None):
 def parse_file(reader, parser):
     if reader["file_handle"] is None:
         return reader
-    elif reader["headers"] == []:
-        reader = get_headers(reader)
+    hdrs = get_headers(reader)
     line = reader["file_handle"].readline()
     output = []
     while line:
         line = reader["file_handle"].readline()
         output.append(parser(line))
-    reader["data"] = output
-    return reader
+    return {
+        "headers": hdrs["headers"],
+        "file_handle": reader["file_handle"],
+        "data": output,
+    }
 
 
 def close_reader(reader):
+    if reader["file_handle"] is None:
+        return reader
     reader["file_handle"].close()
-    reader["file_handle"] = None
-    return reader
+    return {"headers": reader["headers"], "file_handle": None, "data": reader["data"]}
